@@ -1,17 +1,16 @@
 package src.main.java.controller;
 
-import src.main.java.CryptographyService;
-import src.main.java.service.AccountService;
-import src.main.java.service.UserService;
 import src.main.java.model.Account;
 import src.main.java.model.Password;
 import src.main.java.model.User;
+import src.main.java.network.Request;
+import src.main.java.network.Response;
 import src.main.java.network.annotations.Controller;
 import src.main.java.network.annotations.Path;
-import src.main.java.Request;
-import src.main.java.Response;
+import src.main.java.security.CryptographyService;
+import src.main.java.service.AccountService;
+import src.main.java.service.UserService;
 
-import java.security.Key;
 import java.util.UUID;
 
 @Controller(path = "auth")
@@ -22,11 +21,8 @@ public class AuthenticationController {
     }
 
     public static AuthenticationController getInstance() {
-
         return AuthenticationController.InstanceHolder.instance;
     }
-
-    private AuthenticationController() {}
 
     private final UserService userService = UserService.getInstance();
     private final AccountService accountService = AccountService.getInstance();
@@ -73,7 +69,7 @@ public class AuthenticationController {
 
         Account account = accountService.createAccount(user, password);
         account = accountService.assignHmac(account);
-        UUID sessionId = userService.authenticate(account, password);
+        UUID sessionId = userService.authenticate(account, pass);
 
         Response response = new Response();
         response.addBody("success", true);
@@ -82,7 +78,7 @@ public class AuthenticationController {
         response.addBody("user-name", account.getUser().getName());
         response.addBody("account-number", account.getNumber());
 
-        System.out.println(account.getNumber() + " : " + CryptographyService.decryptPlayfair(account.getPassword().getValue()));
+        System.out.println("Nova conta adicionada: " + account.getNumber());
 
         return response;
     }

@@ -1,16 +1,16 @@
 package main.java.network;
 
-import src.main.java.CryptographyService;
-import src.main.java.Package;
-import src.main.java.Request;
-import src.main.java.Response;
+import src.main.java.network.Package;
+import src.main.java.network.Request;
+import src.main.java.network.Response;
+import src.main.java.security.CryptographyService;
+import src.main.java.security.CustomKey;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.security.Key;
-import java.security.PublicKey;
 
 public class Client {
 
@@ -35,16 +35,16 @@ public class Client {
                 throw new SecurityException("Chave de acesso (Hmac) não configurada.");
             }
 
-            request.addHeader("rsa-public-key", storage.keyPair.getPublic());
+            request.addHeader("rsa-public-key", storage.keyPair.publicKey());
             request.addHeader("session", storage.sessionId);
 
             if (sign)
                 request.addHeader("sign", CryptographyService.sign(request, storage.hmac));
 
-            Key key = CryptographyService.generateKey("AES");
+            SecretKey key = CryptographyService.generateKey("AES");
 
             byte[] encryptedData = CryptographyService.encryptAES(request, key);
-            byte[] encryptedKey = CryptographyService.encryptRSA(key, storage.serverPublicKey);
+            byte[] encryptedKey = CryptographyService.encryptAESKey(key, storage.serverPublicKey);
 
             Package send = new Package(encryptedKey, encryptedData);
 
@@ -55,7 +55,7 @@ public class Client {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             Package recv = (Package) in.readObject();
 
-            key = (Key) CryptographyService.decryptRSA(recv.key(), storage.keyPair.getPrivate());
+            key = CryptographyService.decryptAESKey(recv.key(), storage.keyPair.privateKey());
             Response response = (Response) CryptographyService.decryptAES(recv.data(), key);
 
             out.close();
@@ -77,7 +77,7 @@ public class Client {
         if (storage.serverPublicKey == null) {
             try (Socket socket = new Socket("0.0.0.0", 8081);
                 ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())) {
-                storage.serverPublicKey = (PublicKey) inputStream.readObject();
+                storage.serverPublicKey = (CustomKey) inputStream.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }

@@ -1,4 +1,4 @@
-package src.main.java;
+package src.main.java.network;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -45,18 +45,14 @@ public class Request implements Serializable {
         StringBuilder sb = new StringBuilder("Request{" + "path='" + path + '\'' + ", headers={");
 
         for (var entry : headers.entrySet()) {
-            if (entry.getKey().equals("rsa-public-key")) {
                 sb
                         .append(entry.getKey())
                         .append("=")
-                        .append("Sun RSA public key, 2048 bits");
-            } else {
-                sb
-                        .append(entry.getKey())
-                        .append("=")
-                        .append(entry.getValue());
-            }
+                        .append(entry.getValue())
+                        .append(",");
         }
+
+        sb.replace(sb.lastIndexOf(","), sb.lastIndexOf(","), "}");
 
         sb.append(", body=").append(body).append('}');
 

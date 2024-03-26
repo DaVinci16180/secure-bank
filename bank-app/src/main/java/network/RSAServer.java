@@ -1,16 +1,16 @@
 package src.main.java.network;
 
-import src.main.java.CryptographyService;
+import src.main.java.security.CryptographyService;
+import src.main.java.security.CustomKey;
+import src.main.java.security.CustomKeyPair;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.KeyPair;
-import java.security.PrivateKey;
 
 public class RSAServer implements Runnable {
-    private static final KeyPair keyPair = CryptographyService.generateKeyPair();
+    private static final CustomKeyPair keyPair = CryptographyService.generateKeyPair();
     private final ServerSocket serverSocket;
     private boolean running = true;
 
@@ -27,7 +27,7 @@ public class RSAServer implements Runnable {
                 new Thread(() -> {
                     try {
                         ObjectOutputStream out = new ObjectOutputStream(requester.getOutputStream());
-                        out.writeObject(keyPair.getPublic());
+                        out.writeObject(keyPair.publicKey());
 
                         requester.close();
                     } catch (Exception e) {
@@ -45,7 +45,7 @@ public class RSAServer implements Runnable {
         running = false;
     }
 
-    public static PrivateKey getPrivateKey() {
-        return keyPair.getPrivate();
+    public static CustomKey getPrivateKey() {
+        return keyPair.privateKey();
     }
 }

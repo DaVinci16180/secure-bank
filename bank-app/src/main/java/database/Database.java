@@ -1,6 +1,6 @@
 package src.main.java.database;
 
-import src.main.java.CryptographyService;
+import src.main.java.security.CryptographyService;
 import src.main.java.model.Account;
 
 import java.util.*;
@@ -40,10 +40,7 @@ public class Database {
         System.out.println();
         System.out.println("Accounts:");
         for (var entry : accounts.entrySet())
-            System.out.println("-> " +
-                    entry.getKey() + " : " +
-                    CryptographyService.decryptPlayfair(entry.getValue().getPassword().getValue())
-            );
+            System.out.println(" -> " + entry.getValue().getNumber());
         System.out.println();
 
         return account;

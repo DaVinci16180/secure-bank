@@ -1,8 +1,8 @@
 import main.java.network.Client;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import src.main.java.Request;
-import src.main.java.Response;
+import src.main.java.network.Request;
+import src.main.java.network.Response;
 
 import java.math.BigDecimal;
 

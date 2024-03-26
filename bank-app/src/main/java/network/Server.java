@@ -1,10 +1,12 @@
 package src.main.java.network;
 
-import src.main.java.CryptographyService;
-import src.main.java.Package;
-import src.main.java.Request;
-import src.main.java.Response;
+import src.main.java.security.CryptographyService;
+import src.main.java.network.Package;
+import src.main.java.network.Request;
+import src.main.java.network.Response;
+import src.main.java.security.CustomKey;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -39,11 +41,11 @@ public class Server implements Runnable{
                         Request request = getRequest(in);
                         Response response = handler.handle(request);
 
-                        PublicKey userKey = (PublicKey) request.getHeaders().get("rsa-public-key");
-                        Package pack = generatePackage(response, userKey);
+                        CustomKey userPublicKey = (CustomKey) request.getHeaders().get("rsa-public-key");
+                        Package pack = generatePackage(response, userPublicKey);
 
                         out.writeObject(pack);
-                        out.flush();
+                        out.flush(); 
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     } finally {
@@ -51,7 +53,7 @@ public class Server implements Runnable{
                             in.close();
                             out.close();
                             requester.close();
-                        } catch (IOException ignored) { }
+                        } catch (Exception ignored) { }
                     }
                 });
 
@@ -62,16 +64,16 @@ public class Server implements Runnable{
         }
     }
 
-    public Package generatePackage(Response response, PublicKey userKey) {
-        Key simetricKey = CryptographyService.generateKey("AES");
+    public Package generatePackage(Response response, CustomKey userPublicKey) {
+        SecretKey simetricKey = CryptographyService.generateKey("AES");
         byte[] data = CryptographyService.encryptAES(response, simetricKey);
-        byte[] encryptedKey = CryptographyService.encryptRSA(simetricKey, userKey);
+        byte[] encryptedKey = CryptographyService.encryptAESKey(simetricKey, userPublicKey);
         return new Package(encryptedKey, data);
     }
 
     private Request getRequest(ObjectInputStream in) throws IOException, ClassNotFoundException {
         Package pack = (Package) in.readObject();
-        Key simetricKey = (Key) CryptographyService.decryptRSA(pack.key(), RSAServer.getPrivateKey());
+        SecretKey simetricKey = (SecretKey) CryptographyService.decryptAESKey(pack.key(), RSAServer.getPrivateKey());
         return (Request) CryptographyService.decryptAES(pack.data(), simetricKey);
     }
 

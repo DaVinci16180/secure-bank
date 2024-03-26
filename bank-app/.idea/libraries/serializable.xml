@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="serializable">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../serializable/out/artifacts/serializable/serializable.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../serializable/out/artifacts/serializable/serializable.jar!/" />
+    </SOURCES>
+  </library>
+</component>

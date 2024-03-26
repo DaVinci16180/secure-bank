@@ -1,9 +1,9 @@
 package main.java.actions;
 
-import src.main.java.Request;
-import src.main.java.Response;
 import main.java.network.Client;
 import main.java.network.LocalStorage;
+import src.main.java.network.Request;
+import src.main.java.network.Response;
 
 import java.math.BigDecimal;
 

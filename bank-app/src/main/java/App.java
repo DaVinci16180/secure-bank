@@ -4,23 +4,30 @@ import src.main.java.model.Password;
 import src.main.java.model.User;
 import src.main.java.network.RSAServer;
 import src.main.java.network.Server;
+import src.main.java.security.CryptographyService;
 import src.main.java.service.AccountService;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.util.Arrays;
 
 public class App {
 
     private static final AccountService accountService = AccountService.getInstance();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException, NotBoundException, RemoteException {
+        setup();
+
         try {
             new Thread(new Server(8080)).start();
             new Thread(new RSAServer(8081)).start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        setup();
     }
 
     private static void setup() {

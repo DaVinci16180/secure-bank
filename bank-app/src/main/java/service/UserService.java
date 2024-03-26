@@ -1,6 +1,6 @@
 package src.main.java.service;
 
-import src.main.java.CryptographyService;
+import src.main.java.security.CryptographyService;
 import src.main.java.database.Database;
 import src.main.java.model.Account;
 import src.main.java.model.Password;
@@ -28,13 +28,16 @@ public class UserService {
     }
 
     public UUID authenticate(Account account, Password password) {
-        String encryptedPassword;
-        if (!password.isEncrypted())
-            encryptedPassword = CryptographyService.encryptPlayfair(password.getValue());
-        else
-            encryptedPassword = password.getValue();
+        boolean success = CryptographyService.verifyPassword(password.getValue(), account.getPassword().getValue());
 
-        boolean success = account.getPassword().getValue().equals(encryptedPassword);
+        if (success)
+            return database.saveSession(account);
+
+        throw new IllegalArgumentException("Número da conta ou senha inválidos!");
+    }
+
+    public UUID authenticate(Account account, String password) {
+        boolean success = CryptographyService.verifyPassword(password, account.getPassword().getValue());
 
         if (success)
             return database.saveSession(account);

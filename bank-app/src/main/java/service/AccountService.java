@@ -1,15 +1,13 @@
 package src.main.java.service;
 
-import src.main.java.CryptographyService;
 import src.main.java.database.Database;
 import src.main.java.model.Account;
 import src.main.java.model.Password;
 import src.main.java.model.User;
+import src.main.java.security.CryptographyService;
 
 import java.math.BigDecimal;
 import java.security.Key;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class AccountService {
@@ -95,7 +93,7 @@ public class AccountService {
     }
 
     public void encryptPassword(Password password) {
-        password.setValue(CryptographyService.encryptPlayfair(password.getValue()));
+        password.setValue(CryptographyService.hashPassword(password.getValue()));
         password.setEncrypted(true);
     }
 }

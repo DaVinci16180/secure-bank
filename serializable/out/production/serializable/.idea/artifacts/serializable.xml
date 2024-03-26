@@ -3,6 +3,8 @@
     <output-path>$PROJECT_DIR$/out/artifacts/serializable</output-path>
     <root id="archive" name="serializable.jar">
       <element id="module-output" name="serializable" />
+      <element id="library" level="project" name="jbcrypt-0.4" />
+      <element id="module-source" name="serializable" />
     </root>
   </artifact>
 </component>

@@ -14,7 +14,6 @@ public class InvestmentsService {
     }
 
     public static InvestmentsService getInstance() {
-
         return InvestmentsService.InstanceHolder.instance;
     }
 

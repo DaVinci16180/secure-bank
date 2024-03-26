@@ -1,12 +1,12 @@
 package main.java.network;
 
-import src.main.java.CryptographyService;
+import src.main.java.security.CryptographyService;
+import src.main.java.security.CustomKey;
+import src.main.java.security.CustomKeyPair;
 
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.PublicKey;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class LocalStorage {
@@ -22,9 +22,9 @@ public class LocalStorage {
 
     private LocalStorage() {}
 
-    public KeyPair keyPair = CryptographyService.generateKeyPair();
+    public CustomKeyPair keyPair = CryptographyService.generateKeyPair();
     public Key hmac;
-    public PublicKey serverPublicKey;
+    public CustomKey serverPublicKey;
     public UUID sessionId = null;
     public String accountNumber;
     public String userName;

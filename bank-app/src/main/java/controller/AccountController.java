@@ -1,7 +1,7 @@
 package src.main.java.controller;
 
-import src.main.java.Request;
-import src.main.java.Response;
+import src.main.java.network.Request;
+import src.main.java.network.Response;
 import src.main.java.network.annotations.Controller;
 import src.main.java.network.annotations.Path;
 import src.main.java.service.AccountService;

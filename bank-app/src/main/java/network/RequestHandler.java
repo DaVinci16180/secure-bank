@@ -1,12 +1,12 @@
 package src.main.java.network;
 
-import src.main.java.CryptographyService;
+import src.main.java.security.CryptographyService;
 import src.main.java.database.Database;
 import src.main.java.model.Account;
 import src.main.java.network.annotations.Controller;
 import src.main.java.network.annotations.Path;
-import src.main.java.Request;
-import src.main.java.Response;
+import src.main.java.network.Request;
+import src.main.java.network.Response;
 import src.main.java.service.AccountService;
 
 import java.io.BufferedReader;

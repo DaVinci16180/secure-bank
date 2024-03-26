@@ -1,4 +1,4 @@
-package src.main.java;
+package src.main.java.network;
 
 import java.io.Serializable;
 import java.util.HashMap;
